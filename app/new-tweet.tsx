@@ -1,4 +1,5 @@
 import {
+    ActivityIndicator,
     Image,
     Pressable,
     SafeAreaView,
@@ -8,6 +9,9 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { createTweet } from "../lib/api/tweets";
 
 const user = {
     id: "t0",
@@ -25,14 +29,32 @@ const user = {
     numberOfLikes: 10,
 };
 export default function newTweet() {
-    const [content, setContent] = useState("");
+    const [text, setText] = useState("");
     const router = useRouter();
 
+    const queryClient = useQueryClient();
+
+    const { mutateAsync, isLoading, isError, error } = useMutation({
+        mutationFn: createTweet,
+        onSuccess: (data) => {
+            queryClient.setQueriesData(["tweets"], (existingTweets: any) => [
+                data,
+                ...existingTweets,
+            ]);
+        },
+    });
+
     // handle tweet button
-    function handleTweet() {
-        setContent("");
-        router.back();
-    }
+    const handleTweet = async () => {
+        try {
+            await mutateAsync({ content: text });
+
+            setText("");
+            router.back();
+        } catch (e) {
+            console.log("Error creating tweet", e);
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -46,7 +68,7 @@ export default function newTweet() {
                     <Link href={"/"}>
                         <Text className={"text-xl font-bold"}>Cancel</Text>{" "}
                     </Link>
-
+                    {isLoading && <ActivityIndicator />}
                     <Pressable
                         onPress={handleTweet}
                         className="bg-[#1c9bf0] px-5 py-2 rounded-3xl"
@@ -67,11 +89,13 @@ export default function newTweet() {
                         className={"flex-1"}
                         multiline
                         numberOfLines={3}
-                        value={content}
-                        onChangeText={(text) => setContent(text)}
+                        value={text}
+                        onChangeText={(text) => setText(text)}
                     />
                 </View>
             </View>
+            {/* error */}
+            {isError && <Text>Error:{error.message}</Text>}
         </SafeAreaView>
     );
 }

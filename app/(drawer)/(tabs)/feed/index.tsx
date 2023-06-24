@@ -1,17 +1,77 @@
-import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
-import { FlatList, Pressable, StyleSheet } from "react-native";
+import {
+    ActivityIndicator,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 
 import { Link } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Tweet from "../../../../components/Tweet";
-import { View } from "../../../../components/Themed";
-import tweets from "../../../../assets/data/tweets";
+import { listTweets } from "../../../../lib/api/tweets";
+// import tweets from "../../../../assets/data/tweets";
 import { twitterBlue } from "../../../../assets/customColor";
+import { useQuery } from "@tanstack/react-query";
 
 export default function FeedScreen() {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["tweets"],
+        queryFn: listTweets,
+    });
+
+    // const [tweets, setTweets] = useState([]);
+    // useEffect(() => {
+    //     const fetchTweets = async () => {
+    //         // fetch tweets
+    //         const data = await listTweets();
+    //         setTweets(data);
+    //     };
+
+    //     fetchTweets();
+    // }, []);
+
+    if (isLoading)
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator shouldRasterizeIOS />
+            </View>
+        );
+
+    if (error) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Text
+                    style={{
+                        fontSize: 24,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        paddingHorizontal: 10,
+                    }}
+                >
+                    Error fetching tweets. Please try again later.
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <View className={"bg-white flex-1"}>
             <FlatList
-                data={tweets}
+                data={data}
                 renderItem={({ item }) => <Tweet tweet={item} />}
             />
 

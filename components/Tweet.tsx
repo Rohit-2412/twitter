@@ -1,10 +1,14 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+    backgroundColor,
+    twitterBlue,
+    whiteColor,
+} from "../assets/customColor";
 
 import { Entypo } from "@expo/vector-icons";
 import IconButton from "./IconButton";
 import { Link } from "expo-router";
 import { TweetType } from "../types";
-import { whiteColor } from "../assets/customColor";
 
 type TweetProps = {
     tweet: TweetType;
@@ -71,10 +75,29 @@ export default function Tweet({ tweet }: TweetProps) {
     return (
         <Link href={`/feed/tweet/${tweet.id}`} asChild>
             <Pressable style={styles.container}>
-                <Image
-                    src={tweet.user.image}
-                    className={"h-12 w-12 rounded-full"}
-                />
+                {/* a round box with first letter of name in the center if img is not provided */}
+                {!tweet.user.image ? (
+                    <View
+                        style={{
+                            height: 50,
+                            width: 50,
+                            borderRadius: 50,
+                            backgroundColor: backgroundColor,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginRight: 6,
+                        }}
+                    >
+                        <Text style={{ fontSize: 24, fontWeight: "600" }}>
+                            {tweet.user.name[0]}
+                        </Text>
+                    </View>
+                ) : (
+                    <Image
+                        src={tweet.user.image}
+                        className={"h-12 w-12 rounded-full"}
+                    />
+                )}
 
                 {/* name username time of post */}
                 <View className={"ml-2 flex-1"}>
@@ -83,7 +106,11 @@ export default function Tweet({ tweet }: TweetProps) {
                             {tweet.user.name}
                         </Text>
                         <Text className={"font-light text-gray-600 ml-2"}>
-                            {tweet.user.username} ·{formatDate(tweet.createdAt)}
+                            @
+                            {tweet.user.username
+                                ? tweet.user.username
+                                : "username"}
+                            · {formatDate(tweet.createdAt)}
                         </Text>
                         <Entypo
                             name={"dots-three-horizontal"}
