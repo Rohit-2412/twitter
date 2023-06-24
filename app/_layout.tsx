@@ -67,6 +67,19 @@ function RootLayoutNav() {
                                 headerShown: false,
                             }}
                         />
+
+                        <Stack.Screen
+                            name="(auth)/signIn"
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="(auth)/authenticate"
+                            options={{
+                                title: "Confirm OTP",
+                            }}
+                        />
                     </Stack>
                 </ThemeProvider>
             </QueryClientProvider>
