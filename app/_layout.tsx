@@ -6,6 +6,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SplashScreen, Stack } from "expo-router";
 
+import AuthContextProvider from "../context/AuthContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useColorScheme } from "react-native";
 import { useEffect } from "react";
@@ -48,41 +49,45 @@ function RootLayoutNav() {
 
     return (
         <>
-            <QueryClientProvider client={client}>
-                <ThemeProvider
-                    value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-                >
-                    <Stack>
-                        <Stack.Screen
-                            name="(drawer)"
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="modal"
-                            options={{ presentation: "modal" }}
-                        />
-                        <Stack.Screen
-                            name="new-tweet"
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
+            <AuthContextProvider>
+                <QueryClientProvider client={client}>
+                    <ThemeProvider
+                        value={
+                            colorScheme === "dark" ? DarkTheme : DefaultTheme
+                        }
+                    >
+                        <Stack>
+                            <Stack.Screen
+                                name="(drawer)"
+                                options={{ headerShown: false }}
+                            />
+                            <Stack.Screen
+                                name="modal"
+                                options={{ presentation: "modal" }}
+                            />
+                            <Stack.Screen
+                                name="new-tweet"
+                                options={{
+                                    headerShown: false,
+                                }}
+                            />
 
-                        <Stack.Screen
-                            name="(auth)/signIn"
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="(auth)/authenticate"
-                            options={{
-                                title: "Confirm OTP",
-                            }}
-                        />
-                    </Stack>
-                </ThemeProvider>
-            </QueryClientProvider>
+                            <Stack.Screen
+                                name="(auth)/signIn"
+                                options={{
+                                    headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="(auth)/authenticate"
+                                options={{
+                                    title: "Confirm OTP",
+                                }}
+                            />
+                        </Stack>
+                    </ThemeProvider>
+                </QueryClientProvider>
+            </AuthContextProvider>
         </>
     );
 }

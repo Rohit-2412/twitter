@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
-export default function SignIn() {
+const SignIn = () => {
     const [email, setEmail] = useState("");
     const router = useRouter();
 
@@ -71,7 +71,7 @@ export default function SignIn() {
             </Pressable>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -82,3 +82,5 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
+
+export default SignIn;

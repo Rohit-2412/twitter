@@ -3,12 +3,15 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
 import { authenticate } from "../../lib/api/auth";
 import { twitterBlue } from "../../assets/customColor";
+import { useAuth } from "../../context/AuthContext";
 import { useSearchParams } from "expo-router";
 import { useState } from "react";
 
-export default function Authenticate() {
+const Authenticate = () => {
     const [code, setCode] = useState("");
     const { email } = useSearchParams();
+
+    const { updateAuthToken } = useAuth();
 
     const onConfirm = async () => {
         if (typeof email !== "string") return;
@@ -16,6 +19,7 @@ export default function Authenticate() {
         // make api call to authenticate
         try {
             const res = await authenticate({ email, emailToken: code });
+            await updateAuthToken(res.token);
         } catch (e) {
             console.log(e.message);
             Alert.alert("Error", "Email code doesn't match.");
@@ -69,7 +73,7 @@ export default function Authenticate() {
             </Pressable>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -80,3 +84,5 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
+
+export default Authenticate;
