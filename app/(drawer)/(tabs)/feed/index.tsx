@@ -10,12 +10,13 @@ import {
 import { Link } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Tweet from "../../../../components/Tweet";
-import { listTweets } from "../../../../lib/api/tweets";
 // import tweets from "../../../../assets/data/tweets";
 import { twitterBlue } from "../../../../assets/customColor";
 import { useQuery } from "@tanstack/react-query";
+import { useTweetsApi } from "../../../../lib/api/tweets";
 
 export default function FeedScreen() {
+    const { listTweets } = useTweetsApi();
     const { data, isLoading, error } = useQuery({
         queryKey: ["tweets"],
         queryFn: listTweets,

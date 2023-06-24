@@ -8,6 +8,7 @@ import { SplashScreen, Stack } from "expo-router";
 
 import AuthContextProvider from "../context/AuthContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import TweetsApiProvider from "../lib/api/tweets";
 import { useColorScheme } from "react-native";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
@@ -50,43 +51,47 @@ function RootLayoutNav() {
     return (
         <>
             <AuthContextProvider>
-                <QueryClientProvider client={client}>
-                    <ThemeProvider
-                        value={
-                            colorScheme === "dark" ? DarkTheme : DefaultTheme
-                        }
-                    >
-                        <Stack>
-                            <Stack.Screen
-                                name="(drawer)"
-                                options={{ headerShown: false }}
-                            />
-                            <Stack.Screen
-                                name="modal"
-                                options={{ presentation: "modal" }}
-                            />
-                            <Stack.Screen
-                                name="new-tweet"
-                                options={{
-                                    headerShown: false,
-                                }}
-                            />
+                <TweetsApiProvider>
+                    <QueryClientProvider client={client}>
+                        <ThemeProvider
+                            value={
+                                colorScheme === "dark"
+                                    ? DarkTheme
+                                    : DefaultTheme
+                            }
+                        >
+                            <Stack>
+                                <Stack.Screen
+                                    name="(drawer)"
+                                    options={{ headerShown: false }}
+                                />
+                                <Stack.Screen
+                                    name="modal"
+                                    options={{ presentation: "modal" }}
+                                />
+                                <Stack.Screen
+                                    name="new-tweet"
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
 
-                            <Stack.Screen
-                                name="(auth)/signIn"
-                                options={{
-                                    headerShown: false,
-                                }}
-                            />
-                            <Stack.Screen
-                                name="(auth)/authenticate"
-                                options={{
-                                    title: "Confirm OTP",
-                                }}
-                            />
-                        </Stack>
-                    </ThemeProvider>
-                </QueryClientProvider>
+                                <Stack.Screen
+                                    name="(auth)/signIn"
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name="(auth)/authenticate"
+                                    options={{
+                                        title: "Confirm OTP",
+                                    }}
+                                />
+                            </Stack>
+                        </ThemeProvider>
+                    </QueryClientProvider>
+                </TweetsApiProvider>
             </AuthContextProvider>
         </>
     );
