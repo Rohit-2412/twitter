@@ -1,20 +1,27 @@
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { TextInput } from "react-native";
+import { login } from "../../lib/api/auth";
 import { twitterBlue } from "../../assets/customColor";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export default function SignIn() {
     const [email, setEmail] = useState("");
-
     const router = useRouter();
 
-    const handleSignIn = () => {
-        router.push({
-            pathname: "/authenticate",
-            params: { email },
-        });
+    // function to handle sign in and redirect to authenticate page
+    const handleSignIn = async () => {
+        try {
+            await login({ email });
+            router.push({
+                pathname: "/authenticate",
+                params: { email },
+            });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (

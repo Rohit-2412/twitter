@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { TextInput } from "react-native";
+import { authenticate } from "../../lib/api/auth";
 import { twitterBlue } from "../../assets/customColor";
 import { useSearchParams } from "expo-router";
 import { useState } from "react";
@@ -9,9 +10,16 @@ export default function Authenticate() {
     const [code, setCode] = useState("");
     const { email } = useSearchParams();
 
-    const onConfirm = () => {
-        console.log(email);
-        console.log("sign in", code);
+    const onConfirm = async () => {
+        if (typeof email !== "string") return;
+
+        // make api call to authenticate
+        try {
+            const res = await authenticate({ email, emailToken: code });
+        } catch (e) {
+            console.log(e.message);
+            Alert.alert("Error", "Email code doesn't match.");
+        }
     };
 
     return (
